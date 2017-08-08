@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Hello">Hello World, Click Me!</string>
     <string name="ApplicationName">Cosas</string>
+    <string name="thing_name">Name</string>
+    <string name="thing_place">Place</string>
+    <string name="save_thing">Save thing</string>
+    <string name="add_thing">Add thing</string>
+    <string name="edit_thing">Edit thing</string>
+    <string name="search">Search</string>
 </resources>

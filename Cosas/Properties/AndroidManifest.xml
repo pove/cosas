@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="Cosas.Cosas" android:versionCode="1" android:versionName="1.0">
-  <uses-sdk android:minSdkVersion="16" />
-  <application android:label="Cosas"></application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.pove.cosas" android:versionCode="1" android:versionName="1.3" android:installLocation="auto">
+	<uses-sdk android:minSdkVersion="16" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<application android:label="Cosas" android:icon="@drawable/Icon" android:theme="@style/MyCustomTheme"></application>
 </manifest>

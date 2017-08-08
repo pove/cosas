@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+  <TextView
+      android:text="@string/thing_name"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/thingNameText"
+      android:paddingLeft="2dp" />
+  <EditText
+      android:id="@+id/thingName"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+  <TextView
+      android:text="@string/thing_place"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/thingPlaceText"
+      android:paddingLeft="2dp" />
+  <AutoCompleteTextView
+      android:id="@+id/thingPlace"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+  <Button
+      android:text="@string/add_thing"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/saveThing" />
+</LinearLayout>
