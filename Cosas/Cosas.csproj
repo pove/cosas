@@ -100,6 +100,7 @@
   <ItemGroup>
     <Compile Include="Adapters\ThingsAdapter.cs" />
     <Compile Include="AddThingDialog.cs" />
+    <Compile Include="FirebaseHelper.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Model\Thing.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

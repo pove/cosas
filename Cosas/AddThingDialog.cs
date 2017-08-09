@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Cosas.Model;
+using System.Collections;
 
 namespace Cosas
 {
@@ -30,11 +31,13 @@ namespace Cosas
         public event DialogEventHandler Dismissed;
 
         private Thing thing;
-                
-        public AddThingDialog(Thing thing)
+        private IList placesList;
+
+        public AddThingDialog(Thing thing, IList placesList)
         {
             // If we get the thing on the constructor means that we are editing an existing item
             this.thing = thing;
+            this.placesList = placesList;
         }
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -65,7 +68,7 @@ namespace Cosas
             var buttonSave = view.FindViewById<Button>(Resource.Id.saveThing);
 
             // Add autocomplete list with places (usefull to repeat places)
-            ArrayAdapter dictionaryAdapter = new ArrayAdapter(this.Dialog.Context, Android.Resource.Layout.SimpleDropDownItem1Line, Things.thingsList.Select(x => x.place).Distinct().ToArray());
+            ArrayAdapter dictionaryAdapter = new ArrayAdapter(this.Dialog.Context, Android.Resource.Layout.SimpleDropDownItem1Line, placesList);
             textPlace.Adapter = dictionaryAdapter;
 
             // Name text edit will grow as text typed
