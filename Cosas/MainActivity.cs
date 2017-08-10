@@ -36,6 +36,11 @@ namespace Cosas
         public static List<Thing> thingsQuery = new List<Thing>();
         public static string currentQuery = string.Empty;
 
+        // UI controls
+        public TextView loading;
+        public ListView list;
+        public Button authButton;
+
         protected override void OnCreate(Bundle bundle)
         {
             // Add this flag to see the status bar coloured with our dark primary color
@@ -47,9 +52,9 @@ namespace Cosas
             SetContentView(Resource.Layout.Main);
 
             // Init Firebase app, auth and database reference
-            InitFirebaseAuth();
+            InitFirebase();
 
-            // Initialize interface events (of the list view, that is our unique element)
+            // Initialize interface controls and events
             InitUI();
         }
 
@@ -82,7 +87,15 @@ namespace Cosas
 
         private void InitUI()
         {
-            ListView list = FindViewById<ListView>(Resource.Id.list);
+            // Loading text control
+            loading = FindViewById<TextView>(Resource.Id.loading);
+            
+            // Auth button control
+            authButton = FindViewById<Button>(Resource.Id.authenticate);
+            authButton.Click += delegate { ShowAuthDialog(); };
+
+            // List view for the things
+            list = FindViewById<ListView>(Resource.Id.list);
             // Handle the list click
             list.ItemClick += listView_ItemClick;
             // Handle the list long click
@@ -108,8 +121,11 @@ namespace Cosas
             RunOnUiThread(() =>
             {
                 // Connect list with the adapter
-                ListView list = FindViewById<ListView>(Resource.Id.list);
                 list.Adapter = adapter;
+
+                // Hide loading
+                if (loading.Visibility == ViewStates.Visible)
+                    loading.Visibility = ViewStates.Gone;
             });
         }
 
@@ -168,7 +184,55 @@ namespace Cosas
             dialogFragment.Show(transaction, title);
         }
 
-        private void InitFirebaseAuth()
+        private void ShowAuthDialog()
+        {
+            // Create transaction to show our add item dialog on this activity
+            var transaction = FragmentManager.BeginTransaction();
+            var dialogFragment = new AuthDialog(Email, Password);
+
+            // Do staff with email/password, when we press authenticate on the dialog
+            dialogFragment.Dismissed += (s, e) =>
+            {
+                // Hide auth button
+                authButton.Visibility = ViewStates.Gone;
+                // Show loading again
+                loading.Visibility = ViewStates.Visible;
+
+                OnCompleteAuthListener OnCompleteAuth = new OnCompleteAuthListener();
+                OnCompleteAuth.Raised += (se, ev) =>
+                {
+
+                    if (ev.task.IsSuccessful)
+                    {
+                        Toast.MakeText(this, "User authenticated", ToastLength.Short).Show();
+
+                        // Load things
+                        Load();
+                    }
+                    else
+                    {
+                        Toast.MakeText(this, ev.task.Exception.Message, ToastLength.Short).Show();
+                        // Show again auth dialog
+                        ShowAuthDialog();
+                    }
+                };
+                auth.SignInWithEmailAndPassword(e.User, e.Password).AddOnCompleteListener(OnCompleteAuth);
+            };
+
+            // If we show dialog title, specify if we are adding or editing an existing item
+            string title = GetString(Resource.String.authentication);
+
+            // Show dialog
+            dialogFragment.Show(transaction, title);
+
+
+            // Hide loading
+            loading.Visibility = ViewStates.Gone;
+            // Show auth button (user can press back)
+            authButton.Visibility = ViewStates.Visible;
+        }
+
+        private void InitFirebase()
         {
             try
             {
@@ -189,11 +253,7 @@ namespace Cosas
                 {
                     auth = FirebaseAuth.GetInstance(app);
 
-                    OnCompleteAuthListener OnCompleteAuth = new OnCompleteAuthListener();
-                    OnCompleteAuth.Raised += OnCompleteAuth_Raised;
-                    auth.SignInWithEmailAndPassword(Email, Password).AddOnCompleteListener(OnCompleteAuth);
-
-                    return;
+                    auth.AuthState += Auth_AuthState;                    
                 }
 
                 // Get a database reference
@@ -216,20 +276,49 @@ namespace Cosas
             }
         }
 
-        private void OnCompleteAuth_Raised(object sender, FirebaseEventArgs e)
+        private void Auth_AuthState(object sender, FirebaseAuth.AuthStateEventArgs e)
         {
-            InitFirebaseAuth();
+            if (e.Auth == null || e.Auth.CurrentUser == null)
+            {
+                // Show auth dialog
+                ShowAuthDialog();                
+            }
         }
 
         private void Load()
         {
             try
             {
-                // Get all items inside the darabase reference
+                // Get all items inside the database reference
                 Query myQuery = databaseReference.OrderByChild("place");
 
                 OnValueEventListener OnValueEvent = new OnValueEventListener();
-                OnValueEvent.Raised += OnValueEvent_Raised;
+                OnValueEvent.Raised += (s, e) =>
+                {
+                    if (e.snapshot == null)
+                        return;
+
+                    // Load finished, reload things lists and refresh UI
+                    thingsList.Clear();
+
+                    if (e.snapshot.HasChildren)
+                    {
+                        Java.Util.IIterator iterator = e.snapshot.Children.Iterator();
+                        while (iterator.HasNext)
+                        {
+                            thingsList.Add(new Thing((DataSnapshot)iterator.Next()));
+                        }
+                    }
+                    else
+                    {
+                        thingsList.Add(new Thing(e.snapshot));
+                    }
+
+                    thingsQuery = thingsList;
+
+                    // Refresh UI list view
+                    RefreshUI();
+                };
 
                 // Add listener that raises when load finish
                 myQuery.AddValueEventListener(OnValueEvent);
@@ -239,28 +328,6 @@ namespace Cosas
                 Console.WriteLine(ex.Message);
                 Toast.MakeText(Application.Context, ex.Message, ToastLength.Long).Show();
             }
-        }
-
-        private void OnValueEvent_Raised(object sender, FirebaseEventArgs e)
-        {
-            // Load finished, reload things lists and refresh UI
-            thingsList.Clear();
-
-            if (e.snapshot.HasChildren)
-            {
-                Java.Util.IIterator iterator = e.snapshot.Children.Iterator();
-                while (iterator.HasNext)
-                {
-                    thingsList.Add(new Thing((DataSnapshot)iterator.Next()));
-                }
-            }
-            else
-            {
-                thingsList.Add(new Thing(e.snapshot));
-            }
-
-            thingsQuery = thingsList;
-            RefreshUI();
         }
 
         private void CreateUpdate(string thingName, string thingPlace, string thingUid = null)
@@ -276,9 +343,19 @@ namespace Cosas
             try
             {
                 OnCompleteListener OnComplete = new OnCompleteListener();
-                OnComplete.Raised += OnComplete_Raised;
+                OnComplete.Raised += (s, e) =>
+                {
+                    // Add/update thing completed, so load all things again
+                    Load();
+                };
+
                 OnFailureListener OnFailure = new OnFailureListener();
-                OnFailure.Raised += OnFailure_Raised;
+                OnFailure.Raised += (s, e) =>
+                {
+                    // Add/update thing failed, alert with the exception message
+                    Console.WriteLine(e.exception.Message);
+                    Toast.MakeText(Application.Context, e.exception.Message, ToastLength.Long).Show();
+                };
 
                 // If not exists (if we don't have the thing id) create a new one, otherwise update it
                 if (string.IsNullOrEmpty(thingUid))
@@ -293,25 +370,20 @@ namespace Cosas
             }
         }
 
-        private void OnComplete_Raised(object sender, FirebaseEventArgs e)
-        {
-            // Add/update thing completed, so load all things again
-            Load();
-        }
-
-        private void OnFailure_Raised(object sender, FirebaseEventArgs e)
-        {
-            // Add/update thing failed, alert with the exception message
-            Console.WriteLine(e.exception.Message);
-            Toast.MakeText(Application.Context, e.exception.Message, ToastLength.Long).Show();
-        }
-
         private void Delete(string thingUid)
         {
             try
             {
                 OnDeleteListener OnDelete = new OnDeleteListener();
-                OnDelete.Raised += OnDelete_Raised;
+                OnDelete.Raised += (s, e) =>
+                {
+                    // Check if delete thing has failed, if not, load all things again
+                    if (e.error == null)
+                        Load();
+                    else
+                        Toast.MakeText(Application.Context, e.error.Message, ToastLength.Long).Show();
+                };
+
                 // Remove the item/child with the given id
                 databaseReference.Child(thingUid).RemoveValue(OnDelete);
             }
@@ -320,15 +392,6 @@ namespace Cosas
                 Console.WriteLine(ex.Message);
                 Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
             }
-        }
-
-        private void OnDelete_Raised(object sender, FirebaseEventArgs e)
-        {
-            // Check if delete thing has failed, if not, load all things again
-            if (e.error == null)
-                Load();
-            else
-                Toast.MakeText(Application.Context, e.error.Message, ToastLength.Long).Show();
         }
     }
 }

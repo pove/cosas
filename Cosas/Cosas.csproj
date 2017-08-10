@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\ThingsAdapter.cs" />
+    <Compile Include="AuthDialog.cs" />
     <Compile Include="AddThingDialog.cs" />
     <Compile Include="FirebaseHelper.cs" />
     <Compile Include="MainActivity.cs" />
@@ -112,6 +113,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\MainMenu.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Auth.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

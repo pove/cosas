@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ApplicationName">Cosas</string>
-    <string name="thing_name">Name</string>
-    <string name="thing_place">Place</string>
-    <string name="save_thing">Save thing</string>
-    <string name="add_thing">Add thing</string>
-    <string name="edit_thing">Edit thing</string>
-    <string name="search">Search</string>
+  <string name="ApplicationName">Cosas</string>
+  <string name="thing_name">Name</string>
+  <string name="thing_place">Place</string>
+  <string name="save_thing">Save thing</string>
+  <string name="add_thing">Add thing</string>
+  <string name="edit_thing">Edit thing</string>
+  <string name="search">Search</string>
+  <string name="loading">Loading...</string>
+  <string name="authentication">Authentication</string>
+  <string name="authenticate">Sign in</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
 </resources>

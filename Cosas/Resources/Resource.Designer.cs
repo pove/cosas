@@ -199,8 +199,8 @@ namespace Cosas
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f080010
-			public const int add_thing = 2131230736;
+			// aapt resource value: 0x7f080017
+			public const int add_thing = 2131230743;
 			
 			// aapt resource value: 0x7f080000
 			public const int adjust_height = 2131230720;
@@ -208,11 +208,23 @@ namespace Cosas
 			// aapt resource value: 0x7f080001
 			public const int adjust_width = 2131230721;
 			
+			// aapt resource value: 0x7f080013
+			public const int authenticate = 2131230739;
+			
+			// aapt resource value: 0x7f08000e
+			public const int authentication = 2131230734;
+			
 			// aapt resource value: 0x7f080006
 			public const int auto = 2131230726;
 			
 			// aapt resource value: 0x7f080007
 			public const int dark = 2131230727;
+			
+			// aapt resource value: 0x7f080010
+			public const int email = 2131230736;
+			
+			// aapt resource value: 0x7f08000f
+			public const int emailText = 2131230735;
 			
 			// aapt resource value: 0x7f080003
 			public const int icon_only = 2131230723;
@@ -220,17 +232,26 @@ namespace Cosas
 			// aapt resource value: 0x7f080008
 			public const int light = 2131230728;
 			
-			// aapt resource value: 0x7f08000e
-			public const int list = 2131230734;
+			// aapt resource value: 0x7f080015
+			public const int list = 2131230741;
+			
+			// aapt resource value: 0x7f080014
+			public const int loading = 2131230740;
 			
 			// aapt resource value: 0x7f080002
 			public const int none = 2131230722;
 			
+			// aapt resource value: 0x7f080012
+			public const int password = 2131230738;
+			
+			// aapt resource value: 0x7f080011
+			public const int passwordText = 2131230737;
+			
 			// aapt resource value: 0x7f08000d
 			public const int saveThing = 2131230733;
 			
-			// aapt resource value: 0x7f08000f
-			public const int search = 2131230735;
+			// aapt resource value: 0x7f080016
+			public const int search = 2131230742;
 			
 			// aapt resource value: 0x7f080004
 			public const int standard = 2131230724;
@@ -283,10 +304,13 @@ namespace Cosas
 			public const int AddThing = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int Main = 2130903041;
+			public const int Auth = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int MainMenu = 2130903042;
+			public const int Main = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int MainMenu = 2130903043;
 			
 			static Layout()
 			{
@@ -306,6 +330,12 @@ namespace Cosas
 			
 			// aapt resource value: 0x7f050015
 			public const int add_thing = 2131034133;
+			
+			// aapt resource value: 0x7f05001a
+			public const int authenticate = 2131034138;
+			
+			// aapt resource value: 0x7f050019
+			public const int authentication = 2131034137;
 			
 			// aapt resource value: 0x7f050000
 			public const int common_google_play_services_enable_button = 2131034112;
@@ -360,6 +390,15 @@ namespace Cosas
 			
 			// aapt resource value: 0x7f050016
 			public const int edit_thing = 2131034134;
+			
+			// aapt resource value: 0x7f05001b
+			public const int email = 2131034139;
+			
+			// aapt resource value: 0x7f050018
+			public const int loading = 2131034136;
+			
+			// aapt resource value: 0x7f05001c
+			public const int password = 2131034140;
 			
 			// aapt resource value: 0x7f050014
 			public const int save_thing = 2131034132;
