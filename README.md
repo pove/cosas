@@ -11,11 +11,9 @@ Start a free Plan Spark on [Google Firebase](https://firebase.google.com). Creat
 Open `Cosas/MainActivity.cs` and set your Firebase variables:
 
 ```c#
-...
 // Firebase variables, you can set them up by code
 private string ApplicationId = "";
 private string ApiKey = "";
 private string DatabaseUrl = "";
-...
 ```
 If you leave them empty, you will be asked for them on app start.
