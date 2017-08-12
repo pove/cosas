@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Java.Util;
+﻿using Java.Util;
 using Firebase.Database;
 
 namespace Cosas.Model
@@ -21,6 +10,7 @@ namespace Cosas.Model
         public string name { get; set; }
         public string place { get; set; }
         public string user { get; set; }
+        public string searchfield { get; set; }
 
         public Thing()
         {
@@ -37,6 +27,9 @@ namespace Cosas.Model
             name = snapShot.Child("name")?.GetValue(true)?.ToString();
             place = snapShot.Child("place")?.GetValue(true)?.ToString();
             user = snapShot.Child("user")?.GetValue(true)?.ToString();
+
+            // we use this property to store name and place without accents and make the search easiest
+            searchfield = SearchHelper.RemoveDiacritics(name) + " " + SearchHelper.RemoveDiacritics(place);
         }
 
         public HashMap ModelToMap()

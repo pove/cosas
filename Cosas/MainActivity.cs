@@ -104,15 +104,27 @@ namespace Cosas
 
         private void RefreshUI()
         {
+            thingsQuery.Clear();
+
             // If we have some query on search menu item, filter our list, otherwise show all
             if (!string.IsNullOrWhiteSpace(currentQuery))
             {
-                thingsQuery = thingsList.FindAll(x => x.name.ToLower().Contains(currentQuery.ToLower()));
-                thingsQuery.AddRange(thingsList.FindAll(x => !thingsQuery.Contains(x) && x.place.ToLower().Contains(currentQuery.ToLower())));
+                // Find by phrase
+                List<Thing> thingsQueried = thingsList.FindAll(x => x.searchfield.IndexOf(currentQuery, StringComparison.InvariantCultureIgnoreCase) > -1);
+
+                // Find with words not together
+                string[] queryWords = currentQuery.Split(' ');
+                foreach (var item in queryWords)
+                {
+                    thingsQueried.AddRange(thingsList.FindAll(x => x.searchfield.IndexOf(item, StringComparison.InvariantCultureIgnoreCase) > -1));
+                }
+
+                // Get most relevant first and discard duplicates
+                thingsQuery.AddRange(thingsQueried.GroupBy(x => x.uid).OrderByDescending(g => g.Count()).SelectMany(x => x).Distinct().ToList());
             }
             else
             {
-                thingsQuery = thingsList;
+                thingsQuery.AddRange(thingsList);
             }
 
             // Create an adapter with things list
@@ -131,8 +143,8 @@ namespace Cosas
 
         private void Search_QueryTextChange(object sender, SearchView.QueryTextChangeEventArgs e)
         {
-            // Set current query text and refresh list view to only see items that match the filter
-            currentQuery = e.NewText;
+            // Set current query text and refresh list view to only see items that match the filter. Remove accents.
+            currentQuery = SearchHelper.RemoveDiacritics(e.NewText);
             RefreshUI();
         }
 
@@ -165,7 +177,7 @@ namespace Cosas
         {
             // Create transaction to show our add item dialog on this activity
             var transaction = FragmentManager.BeginTransaction();
-            var dialogFragment = new AddThingDialog(thing, thingsList.Select(x => x.place).Distinct().ToArray());
+            var dialogFragment = new AddThingDialog(thing, thingsList.Select(x => x.place).OrderBy(x => x.Count()).Distinct().ToArray());
 
 
             // Do staff with new/existing item, when we press save on the dialog
@@ -300,6 +312,7 @@ namespace Cosas
 
                     // Load finished, reload things lists and refresh UI
                     thingsList.Clear();
+                    thingsQuery.Clear();
 
                     if (e.snapshot.HasChildren)
                     {
@@ -314,7 +327,7 @@ namespace Cosas
                         thingsList.Add(new Thing(e.snapshot));
                     }
 
-                    thingsQuery = thingsList;
+                    thingsQuery.AddRange(thingsList);
 
                     // Refresh UI list view
                     RefreshUI();
