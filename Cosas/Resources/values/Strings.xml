@@ -10,6 +10,9 @@
   <string name="loading">Loading...</string>
   <string name="authentication">Authentication</string>
   <string name="authenticate">Sign in</string>
+  <string name="ApplicationId">Application Id</string>
+  <string name="ApiKey">Api Key</string>
+  <string name="DatabaseUrl">Database Url</string>
   <string name="email">Email</string>
   <string name="password">Password</string>
 </resources>

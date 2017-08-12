@@ -13,6 +13,46 @@
       android:paddingTop="10dp"
       android:paddingBottom="10dp"
       android:paddingLeft="2dp" />
+  
+  <TextView
+    android:text="@string/ApplicationId"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/ApplicationIdText"
+    android:paddingLeft="2dp" />
+  <EditText
+      android:id="@+id/ApplicationId"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textNoSuggestions" />
+  
+  <TextView
+    android:text="@string/ApiKey"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/ApiKeyText"
+    android:paddingLeft="2dp" />
+  <EditText
+      android:id="@+id/ApiKey"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textNoSuggestions" />
+  
+  <TextView
+    android:text="@string/DatabaseUrl"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/DatabaseUrlText"
+    android:paddingLeft="2dp" />
+  <EditText
+      android:id="@+id/DatabaseUrl"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textWebEmailAddress" />
+  
   <TextView
       android:text="@string/email"
       android:textAppearance="?android:attr/textAppearanceMedium"
@@ -25,6 +65,7 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content" 
       android:inputType="textEmailAddress" />
+  
   <TextView
       android:text="@string/password"
       android:textAppearance="?android:attr/textAppearanceMedium"
@@ -37,6 +78,7 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:inputType="textPassword" />
+  
   <Button
       android:text="@string/authenticate"
       android:layout_width="match_parent"

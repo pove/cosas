@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Cosas.Adapters;
 using Android.Views;
 using System.Linq;
+using Android.Content;
+using Android.Preferences;
 
 namespace Cosas
 {
@@ -17,13 +19,13 @@ namespace Cosas
         ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize)] // Without that, it crashes when orientation changed
     public class MainActivity : Activity
     {
-        // Firebase constants
-        private const string ApplicationId = "";
-        private const string ApiKey = "";
-        private const string DatabaseUrl = "";
+        // Firebase variables, you can set them up by code
+        private string ApplicationId = "";
+        private string ApiKey = "";
+        private string DatabaseUrl = "";
 
         // Firebase Auth, very unsecure, only use for debug purposes
-        private const string Email = "";
+        private string Email = "";
         private const string Password = "";
 
         // Firebase variables
@@ -47,6 +49,17 @@ namespace Cosas
             Window.AddFlags(WindowManagerFlags.DrawsSystemBarBackgrounds);
 
             base.OnCreate(bundle);
+
+            // Get Firebase variables from local preferences
+            ISharedPreferences getprefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            if (string.IsNullOrWhiteSpace(ApplicationId))
+                ApplicationId = getprefs.GetString("ApplicationId", string.Empty);
+            if (string.IsNullOrWhiteSpace(ApiKey))
+                ApiKey = getprefs.GetString("ApiKey", string.Empty);
+            if (string.IsNullOrWhiteSpace(DatabaseUrl))
+                DatabaseUrl = getprefs.GetString("DatabaseUrl", string.Empty);
+            if (string.IsNullOrWhiteSpace(Email))
+                Email = getprefs.GetString("Email", string.Empty);
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
@@ -116,6 +129,9 @@ namespace Cosas
                 string[] queryWords = currentQuery.Split(' ');
                 foreach (var item in queryWords)
                 {
+                    if (string.IsNullOrWhiteSpace(item))
+                        continue;
+
                     thingsQueried.AddRange(thingsList.FindAll(x => x.searchfield.IndexOf(item, StringComparison.InvariantCultureIgnoreCase) > -1));
                 }
 
@@ -200,7 +216,7 @@ namespace Cosas
         {
             // Create transaction to show our add item dialog on this activity
             var transaction = FragmentManager.BeginTransaction();
-            var dialogFragment = new AuthDialog(Email, Password);
+            var dialogFragment = new AuthDialog(ApplicationId, ApiKey, DatabaseUrl, Email, Password);
 
             // Do staff with email/password, when we press authenticate on the dialog
             dialogFragment.Dismissed += (s, e) =>
@@ -210,10 +226,30 @@ namespace Cosas
                 // Show loading again
                 loading.Visibility = ViewStates.Visible;
 
+                // Set Firebase variables
+                ApplicationId = e.ApplicationId;
+                ApiKey = e.ApiKey;
+                DatabaseUrl = e.DatabaseUrl;
+
+                // Save Firebase variables on local preferences
+                ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+                ISharedPreferencesEditor editor = prefs.Edit();
+                editor.PutString("ApplicationId", ApplicationId);
+                editor.PutString("ApiKey", ApiKey);
+                editor.PutString("DatabaseUrl", DatabaseUrl);
+                editor.PutString("Email", Email);
+                editor.Apply();
+
+                if (app == null)
+                {
+                    // Needs to initialize Firebase app first
+                    InitFirebase();
+                    return;
+                }
+
                 OnCompleteAuthListener OnCompleteAuth = new OnCompleteAuthListener();
                 OnCompleteAuth.Raised += (se, ev) =>
                 {
-
                     if (ev.task.IsSuccessful)
                     {
                         Toast.MakeText(this, "User authenticated", ToastLength.Short).Show();
@@ -228,6 +264,7 @@ namespace Cosas
                         ShowAuthDialog();
                     }
                 };
+
                 auth.SignInWithEmailAndPassword(e.User, e.Password).AddOnCompleteListener(OnCompleteAuth);
             };
 
@@ -239,9 +276,11 @@ namespace Cosas
 
 
             // Hide loading
-            loading.Visibility = ViewStates.Gone;
+            if (loading != null)
+                loading.Visibility = ViewStates.Gone;
             // Show auth button (user can press back)
-            authButton.Visibility = ViewStates.Visible;
+            if (authButton != null)
+                authButton.Visibility = ViewStates.Visible;
         }
 
         private void InitFirebase()
@@ -251,6 +290,13 @@ namespace Cosas
                 // Initialize Firebase app
                 if (app == null)
                 {
+                    if (string.IsNullOrWhiteSpace(ApplicationId) || string.IsNullOrWhiteSpace(ApiKey) || string.IsNullOrWhiteSpace(DatabaseUrl))
+                    {
+                        // Show auth dialog to set firebase variables and authentication
+                        ShowAuthDialog();
+                        return;
+                    }
+
                     var options = new FirebaseOptions.Builder()
                     .SetApplicationId(ApplicationId)
                     .SetApiKey(ApiKey)

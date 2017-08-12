@@ -17,6 +17,9 @@ namespace Cosas
     // Public arguments of our event delegate
     public class AuthEventArgs : EventArgs
     {
+        public string ApplicationId { get; set; }
+        public string ApiKey { get; set; }
+        public string DatabaseUrl { get; set; }
         public string User { get; set; }
         public string Password { get; set; }
     }
@@ -29,12 +32,18 @@ namespace Cosas
     {
         public event AuthEventHandler Dismissed;
 
+        private string ApplicationId;
+        private string ApiKey;
+        private string DatabaseUrl;
         private string user;
         private string password;
 
         // Contructor for debug email/password constants
-        public AuthDialog(string user, string password)
+        public AuthDialog(string ApplicationId, string ApiKey, string DatabaseUrl, string user, string password)
         {
+            this.ApplicationId = ApplicationId;
+            this.ApiKey = ApiKey;
+            this.DatabaseUrl = DatabaseUrl;
             this.user = user;
             this.password = password;
         }
@@ -62,17 +71,18 @@ namespace Cosas
             var view = inflater.Inflate(Resource.Layout.Auth, container, false);
 
             // get ui elements
+            var textApplicationId = view.FindViewById<TextView>(Resource.Id.ApplicationId);
+            var textApiKey = view.FindViewById<TextView>(Resource.Id.ApiKey);
+            var textDatabaseUrl = view.FindViewById<TextView>(Resource.Id.DatabaseUrl);
             var textEmail = view.FindViewById<TextView>(Resource.Id.email);
             var textPassword = view.FindViewById<TextView>(Resource.Id.password);
             var buttonAuth = view.FindViewById<Button>(Resource.Id.authenticate);
 
+            textApplicationId.Text = ApplicationId;
+            textApiKey.Text = ApiKey;
+            textDatabaseUrl.Text = DatabaseUrl;
             textEmail.Text = user;
             textPassword.Text = password;
-
-            // Set focus and show keyboard
-            textEmail.RequestFocus();
-            this.Dialog.Window.SetSoftInputMode(SoftInput.StateVisible);
-
 
             // When authenticate button pressed
             buttonAuth.Click += delegate
@@ -82,7 +92,7 @@ namespace Cosas
 
                 // Return values
                 if (null != Dismissed)
-                    Dismissed(this, new AuthEventArgs { User = textEmail.Text, Password = textPassword.Text });
+                    Dismissed(this, new AuthEventArgs { ApplicationId = textApplicationId.Text, ApiKey = textApiKey.Text, DatabaseUrl = textDatabaseUrl.Text, User = textEmail.Text, Password = textPassword.Text });
 
                 Dismiss();
             };

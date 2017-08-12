@@ -199,8 +199,26 @@ namespace Cosas
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f080017
-			public const int add_thing = 2131230743;
+			// aapt resource value: 0x7f080012
+			public const int ApiKey = 2131230738;
+			
+			// aapt resource value: 0x7f080011
+			public const int ApiKeyText = 2131230737;
+			
+			// aapt resource value: 0x7f080010
+			public const int ApplicationId = 2131230736;
+			
+			// aapt resource value: 0x7f08000f
+			public const int ApplicationIdText = 2131230735;
+			
+			// aapt resource value: 0x7f080014
+			public const int DatabaseUrl = 2131230740;
+			
+			// aapt resource value: 0x7f080013
+			public const int DatabaseUrlText = 2131230739;
+			
+			// aapt resource value: 0x7f08001d
+			public const int add_thing = 2131230749;
 			
 			// aapt resource value: 0x7f080000
 			public const int adjust_height = 2131230720;
@@ -208,8 +226,8 @@ namespace Cosas
 			// aapt resource value: 0x7f080001
 			public const int adjust_width = 2131230721;
 			
-			// aapt resource value: 0x7f080013
-			public const int authenticate = 2131230739;
+			// aapt resource value: 0x7f080019
+			public const int authenticate = 2131230745;
 			
 			// aapt resource value: 0x7f08000e
 			public const int authentication = 2131230734;
@@ -220,11 +238,11 @@ namespace Cosas
 			// aapt resource value: 0x7f080007
 			public const int dark = 2131230727;
 			
-			// aapt resource value: 0x7f080010
-			public const int email = 2131230736;
+			// aapt resource value: 0x7f080016
+			public const int email = 2131230742;
 			
-			// aapt resource value: 0x7f08000f
-			public const int emailText = 2131230735;
+			// aapt resource value: 0x7f080015
+			public const int emailText = 2131230741;
 			
 			// aapt resource value: 0x7f080003
 			public const int icon_only = 2131230723;
@@ -232,26 +250,26 @@ namespace Cosas
 			// aapt resource value: 0x7f080008
 			public const int light = 2131230728;
 			
-			// aapt resource value: 0x7f080015
-			public const int list = 2131230741;
+			// aapt resource value: 0x7f08001b
+			public const int list = 2131230747;
 			
-			// aapt resource value: 0x7f080014
-			public const int loading = 2131230740;
+			// aapt resource value: 0x7f08001a
+			public const int loading = 2131230746;
 			
 			// aapt resource value: 0x7f080002
 			public const int none = 2131230722;
 			
-			// aapt resource value: 0x7f080012
-			public const int password = 2131230738;
+			// aapt resource value: 0x7f080018
+			public const int password = 2131230744;
 			
-			// aapt resource value: 0x7f080011
-			public const int passwordText = 2131230737;
+			// aapt resource value: 0x7f080017
+			public const int passwordText = 2131230743;
 			
 			// aapt resource value: 0x7f08000d
 			public const int saveThing = 2131230733;
 			
-			// aapt resource value: 0x7f080016
-			public const int search = 2131230742;
+			// aapt resource value: 0x7f08001c
+			public const int search = 2131230748;
 			
 			// aapt resource value: 0x7f080004
 			public const int standard = 2131230724;
@@ -325,8 +343,17 @@ namespace Cosas
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f05001c
+			public const int ApiKey = 2131034140;
+			
+			// aapt resource value: 0x7f05001b
+			public const int ApplicationId = 2131034139;
+			
 			// aapt resource value: 0x7f050011
 			public const int ApplicationName = 2131034129;
+			
+			// aapt resource value: 0x7f05001d
+			public const int DatabaseUrl = 2131034141;
 			
 			// aapt resource value: 0x7f050015
 			public const int add_thing = 2131034133;
@@ -391,14 +418,14 @@ namespace Cosas
 			// aapt resource value: 0x7f050016
 			public const int edit_thing = 2131034134;
 			
-			// aapt resource value: 0x7f05001b
-			public const int email = 2131034139;
+			// aapt resource value: 0x7f05001e
+			public const int email = 2131034142;
 			
 			// aapt resource value: 0x7f050018
 			public const int loading = 2131034136;
 			
-			// aapt resource value: 0x7f05001c
-			public const int password = 2131034140;
+			// aapt resource value: 0x7f05001f
+			public const int password = 2131034143;
 			
 			// aapt resource value: 0x7f050014
 			public const int save_thing = 2131034132;
