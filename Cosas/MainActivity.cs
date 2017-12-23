@@ -64,11 +64,17 @@ namespace Cosas
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            // Init Firebase app, auth and database reference
-            InitFirebase();
-
             // Initialize interface controls and events
             InitUI();
+
+            // Init Firebase app, auth and database reference
+            InitFirebase();
+        }
+
+        protected override void OnDestroy()
+        {
+            Firebase.FirebaseApp.Instance.Dispose();
+            base.OnDestroy();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -322,10 +328,15 @@ namespace Cosas
 
                     // All our operations will be done on "thing" child
                     databaseReference = db.GetReference("things");
-                }
 
-                // Load all our current items
-                Load();
+                    // Load all our current items
+                    Load();
+                }
+                else
+                {
+                    // Refresh UI list view
+                    RefreshUI();
+                }
             }
             catch (Exception ex)
             {
